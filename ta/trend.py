@@ -765,13 +765,14 @@ class ADXIndicator(IndicatorMixin):
         """
         dip = np.zeros(len(self._trs))
         for i in range(len(self._trs)):
-            dip[i] = 100 * (self._dip[i] / self._trs[i])
+            #print(self._trs[i], ' dip: ', self._dip[i])
+            dip[i] = 100 * (self._dip[i] / self._trs[i]) if self._trs[i] != 0 else 0
 
         din = np.zeros(len(self._trs))
         for i in range(len(self._trs)):
-            din[i] = 100 * (self._din[i] / self._trs[i])
+            din[i] = 100 * (self._din[i] / self._trs[i]) if self._trs[i] != 0 else 0
 
-        directional_index = 100 * np.abs((dip - din) / (dip + din))
+        directional_index = 100 * np.abs((dip - din) / (dip + din + 0.00001))
 
         adx_series = np.zeros(len(self._trs))
         adx_series[self._window] = directional_index[0 : self._window].mean()
