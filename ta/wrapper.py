@@ -570,3 +570,40 @@ def add_all_ta_features(
     )
     df = add_others_ta(df=df, close=close, fillna=fillna, colprefix=colprefix)
     return df
+    
+
+def add_ta_features(
+    df: pd.DataFrame,
+    open: str,  # noqa
+    high: str,
+    low: str,
+    close: str,
+    volume: str,
+    fillna: bool = False,
+    colprefix: str = "",
+) -> pd.DataFrame:
+    """Add all technical analysis features to dataframe.
+
+    Args:
+        df (pandas.core.frame.DataFrame): Dataframe base.
+        open (str): Name of 'open' column.
+        high (str): Name of 'high' column.
+        low (str): Name of 'low' column.
+        close (str): Name of 'close' column.
+        volume (str): Name of 'volume' column.
+        fillna(bool): if True, fill nan values.
+        colprefix(str): Prefix column names inserted
+
+    Returns:
+        pandas.core.frame.DataFrame: Dataframe with new features.
+    """
+    df = add_momentum_ta(
+        df=df,
+        high=high,
+        low=low,
+        close=close,
+        volume=volume,
+        fillna=fillna,
+        colprefix=colprefix,
+    )
+    return df    

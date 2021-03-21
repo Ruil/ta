@@ -7,6 +7,7 @@ Close, High, Low, Volume). It is built on Pandas and Numpy.
 """
 from ta.wrapper import (
     add_all_ta_features,
+    add_ta_features,
     add_momentum_ta,
     add_others_ta,
     add_trend_ta,
@@ -16,6 +17,7 @@ from ta.wrapper import (
 
 __all__ = [
     "add_all_ta_features",
+    "add_ta_features"
     "add_momentum_ta",
     "add_others_ta",
     "add_trend_ta",
