@@ -777,14 +777,14 @@ class ADXIndicator(IndicatorMixin):
         dip = np.zeros(len(self._trs))
 
         for idx, value in enumerate(self._trs):
-            dip[idx] = 100 * (self._dip[idx] / value)
+            dip[idx] = 100 * (self._dip[idx] / value) if value != 0 else 0
 
         din = np.zeros(len(self._trs))
 
         for idx, value in enumerate(self._trs):
-            din[idx] = 100 * (self._din[idx] / value)
+            din[idx] = 100 * (self._din[idx] / value) if value != 0 else 0
 
-        directional_index = 100 * np.abs((dip - din) / (dip + din))
+        directional_index = 100 * np.abs((dip - din) / (dip + din)) if dip + din != 0 else 0 
 
         adx_series = np.zeros(len(self._trs))
         adx_series[self._window] = directional_index[0: self._window].mean()
