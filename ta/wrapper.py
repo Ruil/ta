@@ -70,6 +70,8 @@ def add_volume_ta(
     fillna: bool = False,
     colprefix: str = "",
     vectorized: bool = False,
+    use_stable: bool = True,
+    use_dynamic: bool = True,
 ) -> pd.DataFrame:
     """Add volume technical analysis features to dataframe.
 
@@ -88,15 +90,26 @@ def add_volume_ta(
     """
 
     # Accumulation Distribution Index
-    df[f"{colprefix}volume_adi"] = AccDistIndexIndicator(
+    if use_dynamic:
+      df[f"{colprefix}volume_adi"] = AccDistIndexIndicator(
         high=df[high], low=df[low], close=df[close], volume=df[volume], fillna=fillna
-    ).acc_dist_index()
+      ).acc_dist_index()
 
     # On Balance Volume
-    df[f"{colprefix}volume_obv"] = OnBalanceVolumeIndicator(
+    if use_dynamic:    
+      df[f"{colprefix}volume_obv"] = OnBalanceVolumeIndicator(
         close=df[close], volume=df[volume], fillna=fillna
-    ).on_balance_volume()
-
+      ).on_balance_volume()
+      
+    # Negative Volume Index  
+    if not vectorized and use_dynamic:        
+          df[f"{colprefix}volume_nvi"] = NegativeVolumeIndexIndicator(
+            close=df[close], volume=df[volume], fillna=fillna
+          ).negative_volume_index()
+          
+    if not use_stable:
+      return df
+          
     # Chaikin Money Flow
     df[f"{colprefix}volume_cmf"] = ChaikinMoneyFlowIndicator(
         high=df[high], low=df[low], close=df[close], volume=df[volume], fillna=fillna
@@ -139,11 +152,6 @@ def add_volume_ta(
             window=14,
             fillna=fillna,
         ).money_flow_index()
-
-        # Negative Volume Index
-        df[f"{colprefix}volume_nvi"] = NegativeVolumeIndexIndicator(
-            close=df[close], volume=df[volume], fillna=fillna
-        ).negative_volume_index()
 
     return df
 
@@ -506,6 +514,8 @@ def add_others_ta(
     close: str,
     fillna: bool = False,
     colprefix: str = "",
+    use_stable: bool = True,
+    use_dynamic: bool = True,    
 ) -> pd.DataFrame:
     """Add others analysis features to dataframe.
 
@@ -518,6 +528,15 @@ def add_others_ta(
     Returns:
         pandas.core.frame.DataFrame: Dataframe with new features.
     """
+    # Cumulative Return
+    if use_dynamic:       
+      df[f"{colprefix}others_cr"] = CumulativeReturnIndicator(
+        close=df[close], fillna=fillna
+      ).cumulative_return()
+      
+    if not use_stable:
+      return df
+    
     # Daily Return
     df[f"{colprefix}others_dr"] = DailyReturnIndicator(
         close=df[close], fillna=fillna
@@ -527,11 +546,6 @@ def add_others_ta(
     df[f"{colprefix}others_dlr"] = DailyLogReturnIndicator(
         close=df[close], fillna=fillna
     ).daily_log_return()
-
-    # Cumulative Return
-    df[f"{colprefix}others_cr"] = CumulativeReturnIndicator(
-        close=df[close], fillna=fillna
-    ).cumulative_return()
 
     return df
 
@@ -546,6 +560,8 @@ def add_all_ta_features(
     fillna: bool = False,
     colprefix: str = "",
     vectorized: bool = False,
+    use_stable: bool = True,
+    use_dynamic: bool = True,    
 ) -> pd.DataFrame:
     """Add all technical analysis features to dataframe.
 
@@ -572,6 +588,8 @@ def add_all_ta_features(
         fillna=fillna,
         colprefix=colprefix,
         vectorized=vectorized,
+        use_stable=use_stable,
+        use_dynamic=use_dynamic,        
     )
     df = add_volatility_ta(
         df=df,
@@ -602,6 +620,8 @@ def add_all_ta_features(
         vectorized=vectorized,
     )
     df = add_others_ta(
-        df=df, close=close, fillna=fillna, colprefix=colprefix
+        df=df, close=close, fillna=fillna, colprefix=colprefix,
+        use_stable=use_stable,
+        use_dynamic=use_dynamic,        
     )
     return df
