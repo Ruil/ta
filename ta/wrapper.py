@@ -62,16 +62,16 @@ from ta.volume import (
 
 
 def add_volume_ta(
-    df: pd.DataFrame,
-    high: str,
-    low: str,
-    close: str,
-    volume: str,
-    fillna: bool = False,
-    colprefix: str = "",
-    vectorized: bool = False,
-    use_stable: bool = True,
-    use_dynamic: bool = True,
+        df: pd.DataFrame,
+        high: str,
+        low: str,
+        close: str,
+        volume: str,
+        fillna: bool = False,
+        colprefix: str = "",
+        vectorized: bool = False,
+        use_stable: bool = True,
+        use_dynamic: bool = True,
 ) -> pd.DataFrame:
     """Add volume technical analysis features to dataframe.
 
@@ -91,25 +91,25 @@ def add_volume_ta(
 
     # Accumulation Distribution Index
     if use_dynamic:
-      df[f"{colprefix}volume_adi"] = AccDistIndexIndicator(
-        high=df[high], low=df[low], close=df[close], volume=df[volume], fillna=fillna
-      ).acc_dist_index()
+        df[f"{colprefix}volume_adi"] = AccDistIndexIndicator(
+            high=df[high], low=df[low], close=df[close], volume=df[volume], fillna=fillna
+        ).acc_dist_index()
 
     # On Balance Volume
-    if use_dynamic:    
-      df[f"{colprefix}volume_obv"] = OnBalanceVolumeIndicator(
-        close=df[close], volume=df[volume], fillna=fillna
-      ).on_balance_volume()
-      
-    # Negative Volume Index  
-    if not vectorized and use_dynamic:        
-          df[f"{colprefix}volume_nvi"] = NegativeVolumeIndexIndicator(
+    if use_dynamic:
+        df[f"{colprefix}volume_obv"] = OnBalanceVolumeIndicator(
             close=df[close], volume=df[volume], fillna=fillna
-          ).negative_volume_index()
-          
+        ).on_balance_volume()
+
+    # Negative Volume Index  
+    if not vectorized and use_dynamic:
+        df[f"{colprefix}volume_nvi"] = NegativeVolumeIndexIndicator(
+            close=df[close], volume=df[volume], fillna=fillna
+        ).negative_volume_index()
+
     if not use_stable:
-      return df
-          
+        return df
+
     # Chaikin Money Flow
     df[f"{colprefix}volume_cmf"] = ChaikinMoneyFlowIndicator(
         high=df[high], low=df[low], close=df[close], volume=df[volume], fillna=fillna
@@ -157,13 +157,13 @@ def add_volume_ta(
 
 
 def add_volatility_ta(
-    df: pd.DataFrame,
-    high: str,
-    low: str,
-    close: str,
-    fillna: bool = False,
-    colprefix: str = "",
-    vectorized: bool = False,
+        df: pd.DataFrame,
+        high: str,
+        low: str,
+        close: str,
+        fillna: bool = False,
+        colprefix: str = "",
+        vectorized: bool = False,
 ) -> pd.DataFrame:
     """Add volatility technical analysis features to dataframe.
 
@@ -229,13 +229,13 @@ def add_volatility_ta(
 
 
 def add_trend_ta(
-    df: pd.DataFrame,
-    high: str,
-    low: str,
-    close: str,
-    fillna: bool = False,
-    colprefix: str = "",
-    vectorized: bool = False,
+        df: pd.DataFrame,
+        high: str,
+        low: str,
+        close: str,
+        fillna: bool = False,
+        colprefix: str = "",
+        vectorized: bool = False,
 ) -> pd.DataFrame:
     """Add trend technical analysis features to dataframe.
 
@@ -400,14 +400,14 @@ def add_trend_ta(
 
 
 def add_momentum_ta(
-    df: pd.DataFrame,
-    high: str,
-    low: str,
-    close: str,
-    volume: str,
-    fillna: bool = False,
-    colprefix: str = "",
-    vectorized: bool = False,
+        df: pd.DataFrame,
+        high: str,
+        low: str,
+        close: str,
+        volume: str,
+        fillna: bool = False,
+        colprefix: str = "",
+        vectorized: bool = False,
 ) -> pd.DataFrame:
     """Add trend technical analysis features to dataframe.
 
@@ -510,12 +510,12 @@ def add_momentum_ta(
 
 
 def add_others_ta(
-    df: pd.DataFrame,
-    close: str,
-    fillna: bool = False,
-    colprefix: str = "",
-    use_stable: bool = True,
-    use_dynamic: bool = True,    
+        df: pd.DataFrame,
+        close: str,
+        fillna: bool = False,
+        colprefix: str = "",
+        use_stable: bool = True,
+        use_dynamic: bool = True,
 ) -> pd.DataFrame:
     """Add others analysis features to dataframe.
 
@@ -529,14 +529,14 @@ def add_others_ta(
         pandas.core.frame.DataFrame: Dataframe with new features.
     """
     # Cumulative Return
-    if use_dynamic:       
-      df[f"{colprefix}others_cr"] = CumulativeReturnIndicator(
-        close=df[close], fillna=fillna
-      ).cumulative_return()
-      
+    if use_dynamic:
+        df[f"{colprefix}others_cr"] = CumulativeReturnIndicator(
+            close=df[close], fillna=fillna
+        ).cumulative_return()
+
     if not use_stable:
-      return df
-    
+        return df
+
     # Daily Return
     df[f"{colprefix}others_dr"] = DailyReturnIndicator(
         close=df[close], fillna=fillna
@@ -551,17 +551,17 @@ def add_others_ta(
 
 
 def add_all_ta_features(
-    df: pd.DataFrame,
-    open: str,  # noqa
-    high: str,
-    low: str,
-    close: str,
-    volume: str,
-    fillna: bool = False,
-    colprefix: str = "",
-    vectorized: bool = False,
-    use_stable: bool = True,
-    use_dynamic: bool = True,    
+        df: pd.DataFrame,
+        open: str,  # noqa
+        high: str,
+        low: str,
+        close: str,
+        volume: str,
+        fillna: bool = False,
+        colprefix: str = "",
+        vectorized: bool = False,
+        use_stable: bool = True,
+        use_dynamic: bool = True,
 ) -> pd.DataFrame:
     """Add all technical analysis features to dataframe.
 
@@ -589,8 +589,17 @@ def add_all_ta_features(
         colprefix=colprefix,
         vectorized=vectorized,
         use_stable=use_stable,
-        use_dynamic=use_dynamic,        
+        use_dynamic=use_dynamic,
     )
+    df = add_others_ta(
+        df=df, close=close, fillna=fillna, colprefix=colprefix,
+        use_stable=use_stable,
+        use_dynamic=use_dynamic,
+    )
+
+    if not use_stable:
+        return df
+
     df = add_volatility_ta(
         df=df,
         high=high,
@@ -618,10 +627,5 @@ def add_all_ta_features(
         fillna=fillna,
         colprefix=colprefix,
         vectorized=vectorized,
-    )
-    df = add_others_ta(
-        df=df, close=close, fillna=fillna, colprefix=colprefix,
-        use_stable=use_stable,
-        use_dynamic=use_dynamic,        
     )
     return df
