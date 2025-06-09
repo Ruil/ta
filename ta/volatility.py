@@ -39,7 +39,7 @@ class AverageTrueRange(IndicatorMixin):
         self._high = high
         self._low = low
         self._close = close
-        self._window = window
+        self._window = min(window, len(close))
         self._fillna = fillna
         self._run()
 
